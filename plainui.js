@@ -2,10 +2,21 @@ var PlainGallery = function(_elGallery) {
 
 	//Selecting our node
 	var elGallery = document.querySelector(_elGallery);
-
+        
+        //deactivate links in gallery
+        var linksGallery = document.querySelectorAll('#galleryList a');
+        for( var i = 0; i <  linksGallery.length; i++ ){
+            linksGallery[i].addEventListener('click', function(e){
+                e.preventDefault();
+            });
+        }
+        
 	elGallery.addEventListener("click", function(e) {
-            
-		if(e.target.tagName === 'IMG') {                    
+
+		if(e.target.tagName === 'IMG' || e.target.tagName === 'SPAN') { 
+                        console.log( e.target.tagName );
+                        e.preventDefault();
+                    
 			var elOverlay = document.createElement('div');
 			elOverlay.id = 'overlay';
 			document.body.appendChild(elOverlay);
@@ -77,7 +88,7 @@ var PlainGallery = function(_elGallery) {
 
 					centerImage(largeImage);
 				}
-			}, false)
+			}, false);
 
 		} // target is an image
 
