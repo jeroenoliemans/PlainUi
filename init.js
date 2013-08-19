@@ -3,5 +3,5 @@
  * 
  */
 var plainGallery = PlainGallery('#galleryList');
-
+plainGallery.showImageByIndex(3);
 
