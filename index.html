@@ -3,11 +3,13 @@
     <head>
         <title>PlainUi Only JavaScript</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link href="normalize.css" rel="stylesheet" />
     </head>
-    <body style="font-family: Avantgarde, Verdana, sans-serif;">
+    <body style="padding: 2em;">
         <h1>PlainUI</h1>
         <p>PlainUi started as a personal frustation project. Most of the times i used external UI libraries or clients I needed to customize it thoroughly. </p>
         <h2>PlainGallery</h2>
+        <h3>Example</h3>
         <ul id="galleryList">
             <li>
                 <a href="http://lorempixel.com/800/600/technics/1">
@@ -31,8 +33,15 @@
                 </a>
             </li>
         </ul>
-        <h3>Example</h3>
+        
         <h3>Instruction</h3>
+        <pre>
+/* 
+ * @param: elGallery, selector of the containing UL
+ * 
+ */
+var plainGallery = PlainGallery('#galleryList');
+        </pre>
         <script src="plainui.js"></script>
         <script src="init.js"></script>
     </body>

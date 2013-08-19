@@ -1,8 +1,7 @@
 /* 
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * @param: elGallery, selector of the containing UL
+ * 
  */
-
 var plainGallery = PlainGallery('#galleryList');
 
 
