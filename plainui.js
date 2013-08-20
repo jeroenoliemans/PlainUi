@@ -1,5 +1,7 @@
 var PlainGallery = function(_elGallery) {
 
+    var _galleryIndex = 0;
+    
     //Selecting our node
     var elGallery = document.querySelector(_elGallery);
 
@@ -11,7 +13,7 @@ var PlainGallery = function(_elGallery) {
         });
     }
 
-    //main event
+    //Main event
     elGallery.addEventListener("click", function(e) {
 
         if (e.target.tagName === 'IMG' || e.target.tagName === 'SPAN') {
@@ -24,7 +26,7 @@ var PlainGallery = function(_elGallery) {
 
     }, false);
 
-    //helper functions
+    //Main overlay function
     function createGalleryOverlay(_href) {
 
         var elOverlay = document.createElement('div');
@@ -69,16 +71,22 @@ var PlainGallery = function(_elGallery) {
 
             centerImage(this);
             elOverlay.appendChild(largeImage);
-
         });
-
+        
+        //if more than one picture add controls
+        if( elGallery.children.length > 1 ){
+            createGalleryControls( elOverlay );
+        }
+        
+        //overlay events
         largeImage.addEventListener('click', function() {
             if (elOverlay) {
-                window.removeEventListener('resize', window, false);
-                window.removeEventListener('scroll', window, false);
-                elOverlay.parentNode.removeChild(elOverlay);
+//                window.removeEventListener('resize', window, false);
+//                window.removeEventListener('scroll', window, false);
+//                elOverlay.parentNode.removeChild(elOverlay);
+                resetOverlay(elOverlay);
             }
-        }, false)
+        }, false);
 
         window.addEventListener('scroll', function() {
             if (elOverlay) {
@@ -98,10 +106,37 @@ var PlainGallery = function(_elGallery) {
             }
         }, false);
     }
-
-    function showSpecificImage(_index) {
-        createGalleryOverlay( extractImageUrl( _index ) );
+    //create slideshow navigation
+    function createGalleryControls(_overlay){
+        //add controls
+        var prev = document.createElement('a');
+        prev.id = "prev";
+        prev.textContent = "prev";
+        var next = document.createElement('a');
+        next.id = "next";
+        next.textContent = "next";
+        _overlay.appendChild(prev);
+        _overlay.appendChild(next);
+        //add events
+        prev.addEventListener('click', function(){
+            _galleryIndex--;
+            _galleryIndex = _galleryIndex === -1 ? elGallery.children.length-1 :_galleryIndex;
+            resetOverlay(_overlay);
+            showSpecificImage();
+        }, false);
+        next.addEventListener('click', function(){
+            _galleryIndex++;
+            _galleryIndex = _galleryIndex === elGallery.children.length ? 0 :_galleryIndex;
+            resetOverlay(_overlay);
+            showSpecificImage();
+        }, false);
     }
+    
+    //create specfic overlay 
+    function showSpecificImage() {
+        createGalleryOverlay( extractImageUrl( _galleryIndex ) );
+    }
+    //center the image in the window
     function centerImage(_image) {
         var myDivX = (window.innerWidth - _image.width) / 2;
         var myDivY = (window.innerHeight - _image.height) / 2;
@@ -111,18 +146,23 @@ var PlainGallery = function(_elGallery) {
 
         return _image;
     }
+    //get the image url by index
     function extractImageUrl( _index ){
         var link = elGallery.children[_index].children[0];
         return link.href;
+    }
+    //reset overlay
+    function resetOverlay(_overlay){
+        window.removeEventListener('resize', window, false);
+        window.removeEventListener('scroll', window, false);
+        _overlay.parentNode.removeChild(_overlay);
     }
 
     //PUBLIC INTERFACE
     return{
         showImageByIndex: function(_index) {
-            showSpecificImage(_index);
+            _galleryIndex = _index;
+            showSpecificImage();
         }
     };
-
-
-
 };
