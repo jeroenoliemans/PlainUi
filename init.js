@@ -4,3 +4,5 @@
  */
 var plainGallery = PlainGallery('#galleryList');
 
+var plainAccordion = PlainAccordion('#accordionList');
+

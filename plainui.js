@@ -1,3 +1,8 @@
+/**
+ * 
+ * @param {type} _elGallery
+ * @returns {PlainGallery.showImageByIndex}
+ */
 var PlainGallery = function(_elGallery) {
 
     var _galleryIndex = 0;
@@ -166,3 +171,51 @@ var PlainGallery = function(_elGallery) {
         }
     };
 };
+
+
+
+
+var PlainAccordion = function(_elAccordion) {
+
+    var _openSection = 0;
+    //Selecting our node
+    var elAccordion = document.querySelector(_elAccordion);
+
+    //constructor
+    (function createAccordion(){
+        console.log( "create" );
+    })();
+
+    //Main event
+    elAccordion.addEventListener("click", function(e) {
+        if (e.target.tagName === 'DT' ) {
+            console.log( e.target );
+        }
+
+    }, false);
+
+    //helper functions
+    function showSpecificSection() {
+        
+    }
+    
+
+
+    //PUBLIC INTERFACE
+    return{
+        showSectionByIndex: function(_index) {
+            _openSection = _index
+            showSpecificSection();
+        }
+    };
+};
+
+
+
+
+
+
+
+
+
+
