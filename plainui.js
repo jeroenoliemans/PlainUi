@@ -178,25 +178,53 @@ var PlainGallery = function(_elGallery) {
 var PlainAccordion = function(_elAccordion) {
 
     var _openSection = 0;
+    //store for reference
+    var dtArray = [];
+    var ddArray = [];
     //Selecting our node
     var elAccordion = document.querySelector(_elAccordion);
 
     //constructor
     (function createAccordion(){
-        console.log( "create" );
+        //add index to dt's
+        var dt = elAccordion.querySelectorAll('dt');
+        for( var j = 0; j < dt.length; j++ ){
+            dtArray[j] = dt[j];
+            dtArray[j].style.cursor = "pointer";
+            dtArray[j].setAttribute('data-index', j);
+            dtArray[j].setAttribute('data-show', "false");
+        }
+        //close all dd's
+        var dd = elAccordion.querySelectorAll('dd');
+        for(var i = 0; i < dd.length; i++){
+            ddArray[i] = dd[i];
+            //hide
+            ddArray[i].style.display = 'none';
+        }
     })();
 
     //Main event
     elAccordion.addEventListener("click", function(e) {
         if (e.target.tagName === 'DT' ) {
-            console.log( e.target );
+            showSpecificSection( e.target.getAttribute( 'data-index' ) );
         }
 
     }, false);
 
     //helper functions
-    function showSpecificSection() {
-        
+    function showSpecificSection(_index) {
+        if( dtArray[_index].getAttribute('data-show') === "false" ){
+            ddArray[_index].style.display = 'block';
+            dtArray[_index].setAttribute('data-show', true);
+        }else{
+            ddArray[_index].style.display = 'none';
+            dtArray[_index].setAttribute('data-show', false);
+        }
+    }
+    function hideAllSections(){
+        for( var i = 0; i < ddArray.length; i++  ){
+            ddArray[i].style.display = 'none';
+        }
     }
     
 
