@@ -86,9 +86,6 @@ var PlainGallery = function(_elGallery) {
         //overlay events
         largeImage.addEventListener('click', function() {
             if (elOverlay) {
-//                window.removeEventListener('resize', window, false);
-//                window.removeEventListener('scroll', window, false);
-//                elOverlay.parentNode.removeChild(elOverlay);
                 resetOverlay(elOverlay);
             }
         }, false);
@@ -199,7 +196,7 @@ var PlainAccordion = function(_elAccordion) {
         for(var i = 0; i < dd.length; i++){
             ddArray[i] = dd[i];
             //hide
-            ddArray[i].style.display = 'none';
+            ddArray[i].classList.add('slideUp');
         }
     })();
 
@@ -214,10 +211,12 @@ var PlainAccordion = function(_elAccordion) {
     //helper functions
     function showSpecificSection(_index) {
         if( dtArray[_index].getAttribute('data-show') === "false" ){
-            ddArray[_index].style.display = 'block';
+            ddArray[_index].classList.remove('slideUp');
+            ddArray[_index].classList.add('slideDown');
             dtArray[_index].setAttribute('data-show', true);
         }else{
-            ddArray[_index].style.display = 'none';
+            ddArray[_index].classList.remove('slideDown');
+            ddArray[_index].classList.add('slideUp');
             dtArray[_index].setAttribute('data-show', false);
         }
     }
