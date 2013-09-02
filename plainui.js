@@ -6,13 +6,18 @@
 var PlainGallery = function(_elGallery) {
 
     var _galleryIndex = 0;
+    var _thumbNails = [];
     
     //Selecting our node
     var elGallery = document.querySelector(_elGallery);
 
-    //deactivate links in gallery
+    //deactivate links in gallery and add index
     var linksGallery = document.querySelectorAll('#galleryList a');
     for (var i = 0; i < linksGallery.length; i++) {
+        //add index
+        _thumbNails[i] = linksGallery[i];
+        _thumbNails[i].setAttribute('data-index', i);
+        //preventdefault
         linksGallery[i].addEventListener('click', function(e) {
             e.preventDefault();
         });
@@ -23,9 +28,8 @@ var PlainGallery = function(_elGallery) {
 
         if (e.target.tagName === 'IMG' || e.target.tagName === 'SPAN') {
             e.preventDefault();
-
+            _galleryIndex = e.target.parentNode.getAttribute('data-index');
             var linkSrc = e.target.parentNode.href;
-
             createGalleryOverlay(linkSrc);
         }
 
@@ -33,7 +37,6 @@ var PlainGallery = function(_elGallery) {
 
     //Main overlay function
     function createGalleryOverlay(_href) {
-
         var elOverlay = document.createElement('div');
         elOverlay.id = 'overlay';
         document.body.appendChild(elOverlay);
@@ -50,6 +53,12 @@ var PlainGallery = function(_elGallery) {
         elOverlay.style.top = window.pageYOffset + 'px';
         elOverlay.style.left = window.pageXOffset + 'px';
 
+        var imageContainer = document.createElement('div');
+        imageContainer.id = 'imageContainer';
+        imageContainer.style.display = 'block';
+        imageContainer.style.position = 'absolute';
+        
+        imageContainer.style.backgroundColor = 'transparent';
 
         var largeImage = document.createElement('img');
         largeImage.id = 'largeImage';
@@ -74,19 +83,25 @@ var PlainGallery = function(_elGallery) {
                 this.width = this.width * this.ratio;
             }
 
-            centerImage(this);
-            elOverlay.appendChild(largeImage);
+            //set containerwidth/height
+            imageContainer.width = this.width;
+            imageContainer.height = this.height + 40;
+
+            centerImage(imageContainer);
+            
+            elOverlay.appendChild(imageContainer);
+            imageContainer.appendChild(largeImage);
         });
         
         //if more than one picture add controls
         if( elGallery.children.length > 1 ){
-            createGalleryControls( elOverlay );
+            createGalleryControls( elOverlay, imageContainer );
         }
         
         //overlay events
         largeImage.addEventListener('click', function() {
             if (elOverlay) {
-                resetOverlay(elOverlay);
+                resetOverlay(elOverlay, imageContainer);
             }
         }, false);
 
@@ -104,12 +119,12 @@ var PlainGallery = function(_elGallery) {
                 elOverlay.style.top = window.pageYOffset + 'px';
                 elOverlay.style.left = window.pageXOffset + 'px';
 
-                centerImage(largeImage);
+                centerImage(imageContainer);
             }
         }, false);
     }
     //create slideshow navigation
-    function createGalleryControls(_overlay){
+    function createGalleryControls(_overlay, _imageContainer){
         //add controls
         var prev = document.createElement('a');
         prev.id = "prev";
@@ -117,19 +132,19 @@ var PlainGallery = function(_elGallery) {
         var next = document.createElement('a');
         next.id = "next";
         next.textContent = "next";
-        _overlay.appendChild(prev);
-        _overlay.appendChild(next);
+        _imageContainer.appendChild(prev);
+        _imageContainer.appendChild(next);
         //add events
         prev.addEventListener('click', function(){
             _galleryIndex--;
             _galleryIndex = _galleryIndex === -1 ? elGallery.children.length-1 :_galleryIndex;
-            resetOverlay(_overlay);
+            resetOverlay(_overlay, _imageContainer);
             showSpecificImage();
         }, false);
         next.addEventListener('click', function(){
             _galleryIndex++;
             _galleryIndex = _galleryIndex === elGallery.children.length ? 0 :_galleryIndex;
-            resetOverlay(_overlay);
+            resetOverlay(_overlay, _imageContainer);
             showSpecificImage();
         }, false);
     }
@@ -154,9 +169,11 @@ var PlainGallery = function(_elGallery) {
         return link.href;
     }
     //reset overlay
-    function resetOverlay(_overlay){
+    function resetOverlay(_overlay, _imageContainer){
         window.removeEventListener('resize', window, false);
         window.removeEventListener('scroll', window, false);
+        //TODO FIX
+        _imageContainer.parentNode.removeChild(_imageContainer);
         _overlay.parentNode.removeChild(_overlay);
     }
 
