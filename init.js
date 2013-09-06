@@ -6,3 +6,5 @@ var plainGallery = PlainGallery('#galleryList');
 
 var plainAccordion = PlainAccordion('#accordionList');
 
+var plainSlider = PlainSlider('#sliderList');
+
